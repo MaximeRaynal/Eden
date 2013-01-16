@@ -5,9 +5,11 @@
  */
 package pi.project.voice;
 
+import java.io.InputStream;
+
 /**
  * Interface de reconnaissance vocale pour le projet
- * Au cours des dévellopement du projet je risque de modifier les libs que
+ * Au cours des développements du projet je risque de modifier les libs que
  *  j'utilises. Je définie donc un interface pour que les surcouches n'est pas 
  *  besoin d'être modifié en cas de modification de la lib sous jacente
  * Dans le cas ou une API ne remplie pas toute les besoins (ex : chuchoter)
@@ -17,8 +19,9 @@ package pi.project.voice;
  */
 public interface VoiceReconizer {
 	/**
-	 * Écoute sur le micro et renvoi sous forme de String le résultat
-	 * @return Une ce qui a était dis sous forme de String
+	 * Écoute sur le micro et renvoi marque dans un stream les commandes à 
+	 *  exécuter
+	 * @return Un flux dans lequel seront inscrit les commandes
 	 */
-	String listen();
+	InputStream listen();
 }

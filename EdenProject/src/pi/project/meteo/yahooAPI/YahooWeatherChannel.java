@@ -14,6 +14,7 @@ import org.jdom2.JDOMException;
 import org.jdom2.Namespace;
 import org.jdom2.input.SAXBuilder;
 
+import pi.project.log.Logger;
 import pi.project.meteo.Meteo;
 import pi.project.meteo.WeatherChannel;
 
@@ -82,7 +83,7 @@ public class YahooWeatherChannel implements WeatherChannel {
 					BASE_URL + "?w=" + city.getWoeid() + "&u=" +
 											(metricSystemUnit ? "c" : "f")))));
 		} catch (JDOMException | IOException e) {
-			e.printStackTrace();
+			Logger.w("Impossible de parser le flux RSS : " + e.getMessage());
 		}
 		return city;
 	}
@@ -111,7 +112,8 @@ public class YahooWeatherChannel implements WeatherChannel {
 		e = channel.getChild("wind", nsY);
 		
 		city.setChill(Integer.parseInt(e.getAttributeValue("chill")));
-		city.setWindDirection(Integer.parseInt(e.getAttributeValue("direction")));
+		city.setWindDirection(Integer.parseInt(
+											 e.getAttributeValue("direction")));
 		city.setWindSpeed(Float.parseFloat(e.getAttributeValue("speed")));
 		
 		e = channel.getChild("atmosphere", nsY);
