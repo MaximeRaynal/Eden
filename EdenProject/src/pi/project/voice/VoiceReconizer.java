@@ -5,7 +5,7 @@
  */
 package pi.project.voice;
 
-import java.io.InputStream;
+import java.io.PipedReader;
 
 /**
  * Interface de reconnaissance vocale pour le projet
@@ -23,5 +23,5 @@ public interface VoiceReconizer {
 	 *  exécuter
 	 * @return Un flux dans lequel seront inscrit les commandes
 	 */
-	InputStream listen();
+	PipedReader listen();
 }

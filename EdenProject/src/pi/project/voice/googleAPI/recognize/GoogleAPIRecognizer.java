@@ -5,8 +5,11 @@
  */
 package pi.project.voice.googleAPI.recognize;
 
-import java.io.InputStream;
+import java.io.IOException;
+import java.io.PipedReader;
+import java.io.PipedWriter;
 
+import pi.project.log.Logger;
 import pi.project.voice.VoiceReconizer;
 
 /**
@@ -22,10 +25,21 @@ public class GoogleAPIRecognizer implements VoiceReconizer {
 	 * @see pi.project.voice.VoiceReconizer#listen()
 	 */
 	@Override
-	public InputStream listen() {
-		InputStream commandeStream = null;
+	public PipedReader listen() {
 		
 		//Initialisation du micro
+		MicSoundCapture microphone = new MicSoundCapture();
+		
+		PipedWriter commandeStreamOut = new PipedWriter();
+		PipedReader commandeStream = null;
+		try {
+			commandeStream = new PipedReader(commandeStreamOut);
+		} catch (IOException e) {
+			Logger.w("Impossible d'utiliser un pipe de communication : " + 
+																e.getMessage());
+		}
+		
+		microphone.startListening(commandeStreamOut);
 		
 		return commandeStream;
 	}
