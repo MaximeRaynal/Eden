@@ -47,7 +47,7 @@ public class Logger {
 	
 		File logFile = new File(LOG_PATH + "eden_log_" + todayIdentifier + 
 																		".xml");
-		logFile.mkdirs();
+		//logFile.mkdirs();
 		try {
 			if (logFile.createNewFile()) {
 				generateNewFile(logFile);
@@ -114,14 +114,16 @@ public class Logger {
 		entry.getRootElement().setAttribute("level", state.getValue());
 		Calendar today = Calendar.getInstance();
 		
-		entry.getRootElement().getChild("hour").setText(
+		entry.getRootElement().getChild("time").setText(
 									today.get(Calendar.HOUR_OF_DAY) + ":" +
 									today.get(Calendar.MINUTE) + ":" + 
 									today.get(Calendar.SECOND));
 		
 		entry.getRootElement().getChild("message").setText(msg);
+		
 		//On ajoute l'entrée
-		return doc.addContent(entry.getContent());
+		doc.getRootElement().getChild("logs").addContent(entry.detachRootElement());
+		return doc;
 	}
 	
 	/**

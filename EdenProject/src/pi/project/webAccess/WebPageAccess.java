@@ -10,7 +10,6 @@ package pi.project.webAccess;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -94,10 +93,11 @@ public class WebPageAccess {
 		StringBuilder fullUrl = new StringBuilder(url + "?");
 		
 		for (String s : param.keySet()) {
-			fullUrl.append(s + "=" +param.get(s) + "&");
+			fullUrl.append(s + "=" + param.get(s) + "&");
 		}
 		
-		URLConnection uc = new URL(fullUrl.toString()).openConnection();
+		URLConnection uc = new URL(fullUrl.deleteCharAt(fullUrl.length() - 1)
+												  .toString()).openConnection();
 		
 		for (String s : requestParam.keySet()) {
 			uc.setRequestProperty(s,requestParam.get(s));
@@ -161,7 +161,7 @@ public class WebPageAccess {
 			fullUrl.append(s + "=" +param.get(s) + "&");
 		}
 		
-		download(fullUrl.toString(), path);
+		download(fullUrl.deleteCharAt(fullUrl.length()-1).toString(), path);
 		
 	}
 	
@@ -186,7 +186,8 @@ public class WebPageAccess {
 			fullUrl.append(s + "=" +param.get(s) + "&");
 		}
 		
-		URLConnection uc = new URL(fullUrl.toString()).openConnection();
+		URLConnection uc = new URL(fullUrl.deleteCharAt(fullUrl.length()-1).
+												   toString()).openConnection();
 		
 		for (String s : requestParam.keySet()) {
 			uc.setRequestProperty(s,requestParam.get(s));
@@ -223,15 +224,15 @@ public class WebPageAccess {
 									Map<String, String> requestParam) 
 									throws MalformedURLException, IOException {
 
-			StringBuilder data = new StringBuilder();
+			StringBuilder fullUrl = new StringBuilder(url);
 			
 			for (String s : param.keySet()) {
-				data.append(URLEncoder.encode(s + "=" +param.get(s) +
+				fullUrl.append(URLEncoder.encode(s + "=" +param.get(s) +
 																"&", "UTF-8"));
 			}
 			
 			HttpURLConnection con = 
-							(HttpURLConnection) new URL(url).openConnection();
+							(HttpURLConnection) new URL(fullUrl.deleteCharAt(fullUrl.length()-1).toString()).openConnection();
 			con.setDoOutput(true);
 			con.setRequestMethod("POST");
 			
@@ -242,12 +243,11 @@ public class WebPageAccess {
 			OutputStreamWriter w = 
 					new OutputStreamWriter(con.getOutputStream());
 			
-			w.write(data.deleteCharAt(data.length()-1).toString());
+			w.write(fullUrl.deleteCharAt(fullUrl.length()-1).toString());
 			w.flush();
 
-			
 			Scanner sc = new Scanner(con.getInputStream());
-			data = new StringBuilder();
+			StringBuilder data = new StringBuilder();
 			while (sc.hasNext()) {
 				data.append(sc.nextLine());
 			}
@@ -271,11 +271,7 @@ public class WebPageAccess {
 		
 		FileInputStream file = null;
 		
-		try {
-			file = new FileInputStream(path);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+	    file = new FileInputStream(path);
 		
 		StringBuilder fullUrl = new StringBuilder(url + "?");
 		
@@ -283,7 +279,8 @@ public class WebPageAccess {
 			fullUrl.append(s + "=" + urlParam.get(s) + "&");
 		}
 		
-		URLConnection con = new URL(fullUrl.toString()).openConnection();
+		URLConnection con = new URL(fullUrl.deleteCharAt(fullUrl.length()-1)
+												  .toString()).openConnection();
 		
 		for (String s : reqParam.keySet()) {
 			con.setRequestProperty(s,reqParam.get(s));

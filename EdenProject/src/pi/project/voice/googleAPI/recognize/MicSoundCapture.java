@@ -90,6 +90,11 @@ public class MicSoundCapture {
 	 *
 	 */
 	class Capture implements Runnable {
+		
+		/**
+		 * La durée de capture en milliseconde
+		 */
+		public static final int CAPTURE_DURATION = 3000; 
 
 		private PipedWriter communicationBufffer;
 		
@@ -106,7 +111,7 @@ public class MicSoundCapture {
 		 */
 		@Override
 		public void run() {
-			Logger.e("Lancement du Thread de capture");
+			Logger.i("Lancement du Thread de capture");
 			
 			//Le niveau de référence pour déclencher ou non l'analyse
 			int referenceLevel = calculateRMSLevel();
@@ -115,20 +120,36 @@ public class MicSoundCapture {
 			while (micLine.isOpen()) {
 				int currentLevel = calculateRMSLevel();
 				if (currentLevel > referenceLevel * LEVEL_VARIATION) {
+					
 					new SoundWriter().start();
-					try {
-						wait(5000);
-					} catch (InterruptedException e) {
-						Logger.e("Un problème est survenue dans le Thread de " +
-								"capture : " + e.getMessage());
+					synchronized (this) {
+						try {
+							System.out.println("Enregistrement de la commande");
+							wait(CAPTURE_DURATION);
+							System.out.println("Fin de l'enregistrement");
+						} catch (InterruptedException e) {
+							Logger.e("Un problème est survenue dans " +
+									"le Thread de capture : " + e.getMessage());
+						}
 					}
 					
 					//Si au bout de 5 sec le niveau est toujours nettement au 
 					//dessus c'est qu'il y a une source sonore parasite (ex: TV)
-					if (currentLevel > referenceLevel * LEVEL_VARIATION) {
+					/*if (currentLevel > referenceLevel * LEVEL_VARIATION) {
+						System.err.println("Recalibrage du micro");
 						referenceLevel = currentLevel;
-					} else {
+					} else {*/
 						
+					System.out.println("Conversion");
+					new FLAC_FileEncoder().encode(
+							new File(SoundWriter.TMP_PATH + 
+											SoundWriter.TMP_FILE_NAME + ".wav"),
+										new File(SoundWriter.TMP_PATH + 
+										  SoundWriter.TMP_FILE_NAME + ".flac"));
+				
+					new File(SoundWriter.TMP_PATH + SoundWriter.TMP_FILE_NAME +
+															   ".wav").delete();
+					
 						Map<String, String> urlParam = new HashMap<>();
 						
 						urlParam.put("xjerr", "1");
@@ -155,21 +176,21 @@ public class MicSoundCapture {
 						SpeechRecognitionAnswer answer = new Gson().fromJson(s, 
 								SpeechRecognitionAnswer.class);
 						
+						Logger.i("Commande reçu : " + 
+												   answer.getBetterHypothese());
+						
 						//Si c'est une commande (débute par Eden)
-						if (answer.getBetterHypothese().matches("^Eden")) {
+						//if (answer.getBetterHypothese().matches("^eden")) {
 							try {
 								communicationBufffer.write(answer.
-													      getBetterHypothese());
+													      getBetterHypothese()+"\n");
 							} catch (IOException e) {
 								Logger.w("Impossible de mettre la commande" +
 										" dans le pipe : " + e.getMessage());
 							}
-						}
+						//}
 						
-					}
-					
-					
-					
+					//}					
 				}
 				
 			}
@@ -186,7 +207,7 @@ public class MicSoundCapture {
 		 */
 		private int calculateRMSLevel()
 		{ 
-			byte[] audioData = new byte[500];
+			byte[] audioData = new byte[250];
 			micLine.read(audioData, 0, audioData.length);
 			// audioData might be buffered data read from a data line
 			long lSum = 0;
@@ -228,7 +249,7 @@ public class MicSoundCapture {
 				Logger.e("Impossible d'enregistrer le fichier audio pour " +
 						"l'analyse : " + e.getMessage());
 			}
-			
+			System.out.println("Conversion");
 			new FLAC_FileEncoder().encode(
 					new File(TMP_PATH + TMP_FILE_NAME + ".wav"),
 								new File(TMP_PATH + TMP_FILE_NAME + ".flac"));
