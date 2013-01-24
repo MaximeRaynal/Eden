@@ -183,7 +183,7 @@ public class MicSoundCapture {
 						//if (answer.getBetterHypothese().matches("^eden")) {
 							try {
 								communicationBufffer.write(answer.
-													      getBetterHypothese()+"\n");
+												   getBetterHypothese() + "\n");
 							} catch (IOException e) {
 								Logger.w("Impossible de mettre la commande" +
 										" dans le pipe : " + e.getMessage());
