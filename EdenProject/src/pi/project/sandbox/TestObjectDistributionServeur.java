@@ -3,7 +3,9 @@
  * pi.project.objectDistribution.serveur                      24 févr. 2013
  * Test.java
  */
-package pi.project.objectDistribution.serveur;
+package pi.project.sandbox;
+
+import pi.project.objectDistribution.serveur.ObjectDistributionServeur;
 
 /**
  * Classe de test du concept de distribution d'objet.
@@ -11,7 +13,7 @@ package pi.project.objectDistribution.serveur;
  * @author Maxime Raynal
  *
  */
-public class Test {
+public class TestObjectDistributionServeur {
 
 	/**
 	 * Point d'entrée du programme, lance juste le serveur.
