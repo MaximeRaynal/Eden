@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/directory" xmlns:tns="http://www.example.org/directory" elementFormDefault="qualified">
+
+    <element name="directory" type="tns:directory"></element>
+
+
+    <complexType name="entry">
+    	<sequence>
+    		<element name="name" type="string"></element>
+    		<element name="path" type="string"></element>
+    	</sequence>
+    </complexType>
+
+
+    <complexType name="directory">
+    	<sequence>
+    		<element name="absolute" type="string"></element>
+    		<element name="entries" type="tns:entry" maxOccurs="unbounded" minOccurs="0"></element>
+    	</sequence>
+    </complexType>
+
+    <attribute name="relative" type="boolean"></attribute>
+</schema>

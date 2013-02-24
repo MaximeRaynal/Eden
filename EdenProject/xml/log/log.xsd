@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/log_xsd" xmlns:tns="http://www.example.org/log_xsd" elementFormDefault="qualified">
+
+    <element name="log" type="tns:log"></element>
+    
+
+    <complexType name="entry">
+    	<sequence maxOccurs="unbounded" minOccurs="0">
+    		<element name="time" type="time" maxOccurs="1" minOccurs="1"></element>
+    		<element name="message" type="string" maxOccurs="1" minOccurs="1"></element>
+    	</sequence>
+    	<attribute name="level" type="string"></attribute>
+    </complexType>
+    
+
+    <complexType name="log">
+    	<sequence>
+    		<element name="date" type="date" maxOccurs="1" minOccurs="1"></element>
+    		<element name="logs" type="tns:entry" maxOccurs="1" minOccurs="1"></element>
+    	</sequence>
+    </complexType>
+
+</schema>

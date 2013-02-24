@@ -1,0 +1,14 @@
+<directory xmlns="http://www.w3schools.com"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="./directory.xsd">
+<!-- Contient la liste des chemins vers les répertoires utile au projet  -->
+<absolute>/home/maxime/workspace/workspaceJSE/EdenProject/</absolute>
+<entry>
+<name>Log Repository</name>
+<path>log/</path>
+</entry>
+<entry>
+<name>Log default</name>
+<path>xml/log/</path>
+</entry>
+</directory>
