@@ -17,6 +17,8 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
+import pi.project.config.Configuration;
+
 /**
  * Classe de gestion des Log.
  * Les logs sont gérer sous la forme XML pour faciliter le parcourt et le
@@ -29,11 +31,6 @@ import org.jdom2.output.XMLOutputter;
 public class Logger {
 	
 	/**
-	 * Le chemin vers le répertoire de log
-	 */
-	public static String LOG_PATH = "./log/";
-	
-	/**
 	 * Ajoute une entrée dans le journal
 	 * @param state Le niveau du message 
 	 * @param msg Le message
@@ -42,12 +39,12 @@ public class Logger {
 		
 		//Récupération de la date courante
 		Calendar today = Calendar.getInstance();
+		//Etrangement la numérotation des mois commence à 0
 		String todayIdentifier = today.get(Calendar.DAY_OF_MONTH) + "_" +
-					today.get(Calendar.MONTH) + "_" + today.get(Calendar.YEAR);
+					((int)today.get(Calendar.MONTH)+1) + "_" + today.get(Calendar.YEAR);
 	
-		File logFile = new File(LOG_PATH + "eden_log_" + todayIdentifier + 
-																		".xml");
-		//logFile.mkdirs();
+		File logFile = new File(Configuration.getConfiguration().path("log") +
+				"/eden_log_" + todayIdentifier + ".xml");
 		try {
 			if (logFile.createNewFile()) {
 				generateNewFile(logFile);
@@ -95,8 +92,10 @@ public class Logger {
 		//Récupération de la date courante
 		Calendar today = Calendar.getInstance();
 		String date = today.get(Calendar.DAY_OF_MONTH) + "/" +
-				today.get(Calendar.MONTH) + "/" + today.get(Calendar.YEAR);
-		Document doc = open("xml/log/log_base.xml");
+				((int) today.get(Calendar.MONTH) + 1) + "/" + 
+				today.get(Calendar.YEAR);
+		Document doc = open(Configuration.getConfiguration().path("log_base") +
+				"/log_base.xml");
 		doc.getRootElement().getChild("date").addContent(date);
 		
 		serialize(doc, logFile);		
@@ -110,7 +109,8 @@ public class Logger {
 	private static Document addEntry(Document doc, String msg, LogState state) {
 		
 		//Génération de l'entrée
-		Document entry = open("xml/log/log_entry.xml");
+		Document entry = open(Configuration.getConfiguration().path("log_base")
+				+ "/log_entry.xml");
 		entry.getRootElement().setAttribute("level", state.getValue());
 		Calendar today = Calendar.getInstance();
 		

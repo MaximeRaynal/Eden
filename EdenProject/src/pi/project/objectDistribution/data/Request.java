@@ -122,7 +122,7 @@ public class Request {
 		//Connexion au serveur
 		String objectParsed = null;
 		try {
-			Socket s = new Socket("eden-raspberry", 10298);
+			Socket s = new Socket("localhost", 10298);
 			new OutputStreamWriter(s.getOutputStream()).write(toJson());
 			
 			objectParsed = new BufferedReader(

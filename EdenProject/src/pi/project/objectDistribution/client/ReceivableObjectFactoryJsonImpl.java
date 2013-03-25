@@ -22,7 +22,7 @@ public class ReceivableObjectFactoryJsonImpl implements ReceivableObjectFactory 
 	 * java.lang.Class)
 	 */
 	@Override
-	public <T> Object restituteObject(Reponse rep, Class<T> type) {
+	public <T> T restituteObject(Reponse rep, Class<T> type) {
 	
 		if (rep.getStatus() != ReponseState.OK) {
 			return null;
